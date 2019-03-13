@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Carro } from '../modelos/carro';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'; //Import HTTPCLIENT
+import { Carro } from '../modelos/carro'; //importa Classe Carro
 import { LoadingController, AlertController } from '@ionic/angular';
+import { CarrosService } from '../providers/carros.service';
+import { HttpErrorResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-home',
@@ -12,9 +14,11 @@ export class HomePage implements OnInit{
   
   public carros: Carro[];
 
-    constructor(public http:HttpClient,
+    constructor(
       private loadingCtrl:LoadingController, //Importa a biblioteca loading
-      private alertCtrl:AlertController
+      private alertCtrl:AlertController,
+      private carrosService: CarrosService,
+      
       ){}
 
   async ngOnInit(){ //async deixa a exibição assincrona
@@ -27,7 +31,7 @@ export class HomePage implements OnInit{
     await loading.present(); //Exibi na tela o loading
 
     //Pode aparecer antes mesmo do loading aparecer
-    this.http.get<Carro[]>('http://localhost:8080/api/carro/listaTodos')
+    this.carrosService.lista()
     .subscribe(
       (carros)=>{
         this.carros = carros;
